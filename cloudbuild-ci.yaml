@@ -1,0 +1,11 @@
+# cloudbuild-ci.yaml
+
+steps:
+  - name: docker.io/library/python:3.7
+    id: Check code style
+    entrypoint: /bin/sh
+    args:
+      - -c
+      - >-
+        pip install black==22.3.0 &&
+        black app.py
