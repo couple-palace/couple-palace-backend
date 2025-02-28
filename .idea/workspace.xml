@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48ccf60d-4c09-4f7e-8448-29d8137c8cd9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/couple-palace-backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/couple-palace-backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cloudbuild-cd.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
