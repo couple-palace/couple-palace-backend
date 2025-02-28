@@ -18,7 +18,7 @@ steps:
         "--image",
         "gcr.io/cloudrun/placeholder:$COMMIT_SHA",
         "--region",
-        "asia-northeast1",
+        "asia-east1",
         "--platform",
         "managed",
         "--port",
