@@ -1,6 +1,13 @@
 # cloudbuild-cd.yaml
+secrets:
+  - secretEnv:
+      DISCORD_WEBHOOK_URL: "projects/alpine-anvil-452303-u8/secrets/discord-webhook-url/versions/latest"
+  - secretEnv:
+      DISCORD_USER: "projects/alpine-anvil-452303-u8/secrets/discord-user/versions/latest"
+
 options:
   logging: CLOUD_LOGGING_ONLY
+
 steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "-t", "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA", "."]
@@ -26,3 +33,16 @@ steps:
         "5000",
         "--allow-unauthenticated",
       ]
+
+  - name: 'curlimages/curl'
+    secretEnv:
+      - 'DISCORD_WEBHOOK_URL'
+      - 'DISCORD_USER'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - >
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d '{"content": "SUCCESSFUL DEPLOYMENT! 로그 링크: https://console.cloud.google.com/logs/viewer?project=$(PROJECT_ID)&... $(DISCORD_USER)"}' \
+             "$DISCORD_WEBHOOK_URL"
