@@ -2,3 +2,4 @@ Flask>=2.0.0
 flask-restx>=0.5.1
 Pillow>=8.0.0
 rembg>=2.0.0
+importlib-metadata; python_version < "3.8"
