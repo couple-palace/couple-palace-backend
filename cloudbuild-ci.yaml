@@ -1,6 +1,13 @@
 # cloudbuild-ci.yaml
+secrets:
+  - secretEnv:
+      DISCORD_WEBHOOK_URL: "projects/alpine-anvil-452303-u8/secrets/discord-webhook-url/versions/latest"
+  - secretEnv:
+      DISCORD_USER: "projects/alpine-anvil-452303-u8/secrets/discord-user/versions/latest"
+
 options:
   logging: CLOUD_LOGGING_ONLY
+
 steps:
   - name: docker.io/library/python:3.7
     id: Check code style
@@ -10,3 +17,16 @@ steps:
       - >-
         pip install black==22.3.0 &&
         black app.py
+
+  - name: 'curlimages/curl'
+    secretEnv:
+      - 'DISCORD_WEBHOOK_URL'
+      - 'DISCORD_USER'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - >
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d '{"content": "SUCCESSFUL INTEGRATION! 로그 링크: https://console.cloud.google.com/logs/viewer?project=$(PROJECT_ID)&... $(DISCORD_USER)"}' \
+             "$DISCORD_WEBHOOK_URL"
