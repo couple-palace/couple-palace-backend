@@ -17,7 +17,7 @@ steps:
         "deploy",
         "$REPO_NAME",
         "--image",
-        "gcr.io/cloudrun/placeholder:$COMMIT_SHA",
+        "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA",
         "--region",
         "asia-east1",
         "--platform",
