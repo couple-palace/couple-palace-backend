@@ -4,11 +4,26 @@ import os
 from flask import Flask, render_template_string
 from routes.photo_routes import api_v1  # Blueprint 모듈 임포트
 import config
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 app.config.from_object(config)
 app.register_blueprint(api_v1)
+
+CORS(
+    app,
+    origins=[
+        "https://www.couplegungjeon.store",
+        "https://couplegungjeon.store",
+        "https://35.216.111.96",
+        "http://www.couplegungjeon.store",
+        "http://couplegungjeon.store",
+        "http://35.216.111.96",
+        "http://localhost",
+        "https://localhost",
+    ],
+)
 
 
 @app.route("/")
