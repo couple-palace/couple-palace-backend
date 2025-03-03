@@ -23,12 +23,12 @@ def generate_profile(answer_indices):
     nickname_prompt = "\n".join(
         [f"Q{i + 1}: {Nickname_Question_Answers[i]['question']}\nA{i + 1}: {answer}" for i, answer in
          enumerate(nickname_answers)])
-    nickname_prompt += "\n위의 답변을 바탕으로 닉네임을 생성해주세요."
+    nickname_prompt += "\n위의 답변을 바탕으로 닉네임을 생성해줘."
 
     marriage_prompt = "\n".join(
         [f"Q{i + 1}: {Marriage_Question_Answers[i]['question']}\nA{i + 1}: {answer}" for i, answer in
          enumerate(marriage_answers)])
-    marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해주세요."
+    marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해줘."
 
     nickname = generate_nickname(nickname_prompt)
     marriage_conditions = generate_marriage_conditions(marriage_prompt)
