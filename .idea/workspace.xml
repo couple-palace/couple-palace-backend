@@ -5,12 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ccfff6b6-0266-4ccf-8cd3-ca6dc91a8f8c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/controllers/profile02_controller.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/question.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dto/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/profile02_routes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/profile02_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/couple-palace-backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/couple-palace-backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/profile02_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/profile02_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dto/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/photo_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/photo_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/profile02_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/profile02_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/profile02_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/profile02_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +91,8 @@
       <option name="presentableId" value="Default" />
       <updated>1740960754611</updated>
       <workItem from="1740960755862" duration="2986000" />
-      <workItem from="1740991284320" duration="1682000" />
+      <workItem from="1740991284320" duration="1839000" />
+      <workItem from="1741019552800" duration="4106000" />
     </task>
     <servers />
   </component>

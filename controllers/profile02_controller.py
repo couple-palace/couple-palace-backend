@@ -1,8 +1,5 @@
 from flask_restx import Resource, reqparse, abort
-from flask import send_file
-from werkzeug.datastructures import FileStorage
-from services.photo_service import process_image
-import os
+from services.profile02_service import generate_profile
 
 profile_parser = reqparse.RequestParser()
 for i in range(7):

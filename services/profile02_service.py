@@ -1,22 +1,34 @@
-
 import openai
-from config import OPENAI_API_KEY
-from data.questions_and_answers import QUESTIONS_AND_ANSWERS
+from data.question import Nickname_Question_Answers, Marriage_Question_Answers
+from dotenv import load_dotenv
+import os
 
-openai.api_key = OPENAI_API_KEY
+# load .env
+load_dotenv()
+
+API_KEY = os.environ.get('API_KEY')
+
 
 def generate_profile(answer_indices):
-    user_answers = []
-    for i, answer_index in enumerate(answer_indices):
-        if answer_index < 1 or answer_index > 4:
-            raise ValueError(f"Invalid answer index for question {i+1}")
-        user_answers.append(QUESTIONS_AND_ANSWERS[i]["answers"][answer_index - 1])
+    nickname_answers = []
+    marriage_answers = []
 
-    nickname_prompt = "\n".join([f"Q{i+1}: {QUESTIONS_AND_ANSWERS[i]['question']}\nA{i+1}: {user_answers[i]}" for i in range(7)])
+    for i, answer_index in enumerate(answer_indices):
+        if answer_index < 0 or answer_index >= 4:
+            raise ValueError(f"Invalid answer index for question {i + 1}")
+
+        nickname_answers.append(Nickname_Question_Answers[i]["answers"][answer_index])
+        marriage_answers.append(Marriage_Question_Answers[i]["answers"][answer_index])
+
+    nickname_prompt = "\n".join(
+        [f"Q{i + 1}: {Nickname_Question_Answers[i]['question']}\nA{i + 1}: {answer}" for i, answer in
+         enumerate(nickname_answers)])
     nickname_prompt += "\n위의 답변을 바탕으로 닉네임을 생성해주세요."
 
-    marriage_prompt = "\n".join([f"Q{i+1}: {QUESTIONS_AND_ANSWERS[i]['question']}\nA{i+1}: {user_answers[i]}" for i in range(7)])
-    marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 4가지를 생성해주세요."
+    marriage_prompt = "\n".join(
+        [f"Q{i + 1}: {Marriage_Question_Answers[i]['question']}\nA{i + 1}: {answer}" for i, answer in
+         enumerate(marriage_answers)])
+    marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해주세요."
 
     nickname = generate_nickname(nickname_prompt)
     marriage_conditions = generate_marriage_conditions(marriage_prompt)
@@ -25,6 +37,7 @@ def generate_profile(answer_indices):
         "nickname": nickname,
         "marriage_conditions": marriage_conditions
     }
+
 
 def generate_nickname(prompt):
     response = openai.ChatCompletion.create(
@@ -44,8 +57,9 @@ def generate_marriage_conditions(prompt):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "너는 연애와 결혼에 관련된 조건을 생성하는 전문가야"},
-            {"role": "system", "content": "주어진 답변을 바탕으로 4가지의 독특하고 재미있는 결혼 조건을 생성해줘"},
+            {"role": "system", "content": "너는 연애와 결혼에 관련된 조건을 생성하는 분석적인 전문가야"},
+            {"role": "system", "content": "트렌디하고 트위터에 돌아다닐만한 말투로, 개웃기게 해줘"},
+            {"role": "system", "content": "주어진 답변을 바탕으로 3가지의 독특하고 재미있는 결혼 조건을 생성해줘"},
             {"role": "user", "content": prompt}
         ],
         temperature=0.7,
