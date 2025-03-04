@@ -2,7 +2,7 @@
 
 import os
 from flask import Flask, render_template_string
-from routes.photo_routes import api_v1  # Blueprint 모듈 임포트
+from routes.common_routes import api_v1  # Blueprint 모듈 임포트
 import config
 from flask_cors import CORS
 

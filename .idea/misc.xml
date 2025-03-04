@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="OSWF" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (couple-palace-backend)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="OSWF" project-jdk-type="Python SDK" />
 </project>

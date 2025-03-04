@@ -14,7 +14,6 @@ upload_parser.add_argument(
 
 
 class PhotoController(Resource):
-    @classmethod
     def post(cls):
         args = upload_parser.parse_args()
         content_file = args.get("content_image")
