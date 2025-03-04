@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Questions</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Question</th>
+            <th>Options</th>
+        </tr>
+        {% for q in questions %}
+        <tr>
+            <td>{{ q.id }}</td>
+            <td>{{ q.type }}</td>
+            <td>{{ q.question }}</td>
+            <td>{{ ', '.join(q.options) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/">
+        <button>Back to Home</button>
+    </a>
+</body>
+</html>
