@@ -3,13 +3,15 @@
 import os
 from flask import Flask, render_template_string
 from routes.common_routes import api_v1  # Blueprint 모듈 임포트
-import config
+from config import Config
+from models.quiz_models import db
 from flask_cors import CORS
 
 
 app = Flask(__name__)
-app.config.from_object(config)
+app.config.from_object(Config)
 app.register_blueprint(api_v1)
+db.init_app(app)
 
 CORS(
     app,
@@ -45,7 +47,10 @@ def index():
     """
     return render_template_string(html)
 
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    with app.app_context():
+        print("🔧 Creating tables in SQLite database...")
+        db.create_all()
+        print("✅ Tables created successfully!")
+    app.run(host="0.0.0.0", port=port, debug=True)
