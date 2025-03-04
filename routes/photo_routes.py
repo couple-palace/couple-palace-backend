@@ -1,22 +1,22 @@
-# routes/test_routes.py
-
-from flask import Blueprint
-from flask_restx import Api
+from flask_restx import Namespace
+from werkzeug.datastructures import FileStorage
 from controllers.photo_controller import PhotoController
 
-# Blueprint 생성
-api_v1 = Blueprint("api_v1", __name__, url_prefix="/api/v1")
+# 네임스페이스 등록
+photo_ns = Namespace("photo", description="배경제거 API")
 
-api = Api(
-    api_v1,
-    version="1.0",
-    title="API 문서",
-    description="커플궁전 server API 명세서",
-    doc="/swagger",
+# 파일 업로드 파서 설정
+photo_upload_parser = photo_ns.parser()
+photo_upload_parser.add_argument(
+    "content_image",
+    location="files",
+    type=FileStorage,
+    required=True,
+    help="배경을 제거할 이미지 파일 (JPEG, PNG 지원)"
 )
 
-# 네임스페이스 생성
-ns = api.namespace("photo", description="배경제거 API")
-
-# 컨트롤러(Resource) 등록: 실제 경로는 /api/v1/remove/bg
-ns.add_resource(PhotoController, "/remove/bg", endpoint="remove_bg")
+# 컨트롤러와 연결 (Swagger에서 photo_upload_parser 사용)
+@photo_ns.route("/remove/bg")
+@photo_ns.expect(photo_upload_parser)
+class PhotoRemoveResource(PhotoController):
+    pass
