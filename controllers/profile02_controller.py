@@ -15,6 +15,6 @@ class ProfileController(Resource):
             profile = generate_profile(answer_indices)
             return profile, 200
         except ValueError as ve:
-            abort(400, str(ve))
+            abort(400, "400-04: 응답이 존재하지 않습니다")  # 400-04: 응답이 존재하지 않습니다
         except Exception as e:
             abort(500, str(e))

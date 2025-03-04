@@ -1,4 +1,4 @@
-from flask_restx import Namespace, reqparse
+from flask_restx import Namespace
 from controllers.profile02_controller import ProfileController
 
 # 네임스페이스 등록
