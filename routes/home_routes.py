@@ -10,6 +10,10 @@ home_bp = Blueprint("home_bp", __name__)
 def index():
     return render_template("index.html", swagger_url="/api/v1/swagger", quiz_table_url="/quiz-table")
 
+@home_bp.route("/health-check")
+def health_check():
+    return "OK", 200
+
 # @home_bp.route("/quiz-table")
 # def quiz_table():
 #     return render_template("quiz_table.html")
