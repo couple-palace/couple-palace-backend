@@ -1,6 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from models import db
 
 # 질문 정보 저장
 class QuizQuestion(db.Model):
