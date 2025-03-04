@@ -11,7 +11,7 @@ def load_secrets():
     client = secretmanager.SecretManagerServiceClient()
     project_id = "alpine-anvil-452303-u8"
 
-    secret_keys = ["FLASK_SECRET_KEY", "DB_URI"]
+    secret_keys = ["FLASK_SECRET_KEY", "DB_URI", "API_KEY"]
 
     for secret_id in secret_keys:
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"

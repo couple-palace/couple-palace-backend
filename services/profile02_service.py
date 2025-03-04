@@ -1,12 +1,13 @@
 import openai
 from data.question import Nickname_Question_Answers, Marriage_Question_Answers
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 
 # load .env
-load_dotenv()
+# load_dotenv()
 
-API_KEY = os.environ.get('API_KEY')
+# API_KEY = os.environ.get('API_KEY')
+API_KEY = os.getenv("API_KEY")
 
 
 def generate_profile(answer_indices):
