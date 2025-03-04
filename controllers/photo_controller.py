@@ -1,43 +1,40 @@
-# controllers/photo_controller.py
-
 from flask_restx import Resource, reqparse, abort
 from flask import send_file
 from werkzeug.datastructures import FileStorage
-from services.photo_service import process_image
 import os
+from services.photo_service import process_image
 
-# 업로드 파서 생성: 'content_image' 파일 필드 (필수)
 upload_parser = reqparse.RequestParser()
 upload_parser.add_argument(
-    "content_image", location="files", type=FileStorage, required=True
+    "content_image",
+    location="files",
+    type=FileStorage,
+    required=True,
+    help="배경을 제거할 이미지 파일 (JPEG, PNG 지원)"
 )
 
-
 class PhotoController(Resource):
-    @classmethod
-    def post(cls):
+    def post(self):
         args = upload_parser.parse_args()
         content_file = args.get("content_image")
 
         # 빈 파일명 검사
-        if content_file.filename == "":
-            abort(400, "Empty filename")
+        if not content_file or content_file.filename == "":
+            abort(400, "400-01: 파일이 비어 있습니다")  # 400-01: 파일이 비어 있습니다
 
         # 이미지 처리 (배경 제거) 수행
         try:
             output_path = process_image(content_file)
-        except ValueError as ve:
-            abort(400, str(ve))
-        except Exception as e:
-            abort(500, str(e))
+        except ValueError:
+            abort(400, "400-02: 배경 제거에 실패했습니다")  # 400-02: 배경 제거에 실패했습니다
+        except Exception:
+            abort(500, "500-00: 서버 내부 오류가 발생했습니다")  # 500-00: 서버 내부 오류가 발생했습니다
 
-        # 결과 파일을 읽어 클라이언트에 전송
+        # 결과 이미지 반환 (JSON 응답 X, 이미지 파일 전송)
         try:
-            with open(output_path, "rb") as f:
-                return send_file(f, mimetype="image/png")
+            return send_file(output_path, mimetype="image/png")  # 200: (이미지 전송)
         finally:
-            # 임시 파일 삭제 (파일 삭제 실패 시 무시)
-            if "output_path" in locals():
+            if os.path.exists(output_path):
                 try:
                     os.remove(output_path)
                 except PermissionError:
