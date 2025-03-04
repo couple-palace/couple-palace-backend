@@ -4,5 +4,6 @@ Pillow>=8.0.0
 rembg>=2.0.0
 importlib-metadata; python_version < "3.8"
 onnxruntime>=1.8.0
-flask-cors==4.0.2
+flask-cors
 openai
+SQLAlchemy
