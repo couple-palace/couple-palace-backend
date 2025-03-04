@@ -14,7 +14,7 @@ steps:
     entrypoint: gcloud
     args:
       [
-        "compute", "ssh", "ocean42_official_gmail_com@couple-palace-server",
+        "compute", "ssh", "ocean42_official@couple-palace-server",
         "--zone", "asia-northeast3-c",
         "--command",
         "docker pull gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA && docker stop my-container || true && docker rm my-container || true && docker run -d -p 5000:5000 --name my-container gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
