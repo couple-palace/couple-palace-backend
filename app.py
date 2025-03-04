@@ -2,16 +2,18 @@
 
 import os
 from flask import Flask, render_template_string
+from flask_sqlalchemy import SQLAlchemy
+
 from routes.common_routes import api_v1  # Blueprint 모듈 임포트
 from config import Config
-from models.quiz_models import db
+from models import db
 from flask_cors import CORS
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.register_blueprint(api_v1)
 db.init_app(app)
+app.register_blueprint(api_v1)
 
 CORS(
     app,
