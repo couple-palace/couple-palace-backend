@@ -1,33 +1,45 @@
 import openai
-from data.question import Nickname_Question_Answers, Marriage_Question_Answers
 from dotenv import load_dotenv
 import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from couple_palace_backend.models.quiz_models import QuizQuestion, QuizOption
 
-# load .env
+# .env 파일 로드
 load_dotenv()
 
 API_KEY = os.environ.get('API_KEY')
 
+# Flask 애플리케이션 초기화 (app.py에서 생성한 app 객체 사용)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')}"  # config.py에서 가져오기
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)  # app.py에서 초기화하므로 주석 처리
+
+def get_question(question_id):
+    from app import app  # app 객체 임포트
+    with app.app_context():  # Flask 애플리케이션 컨텍스트 내에서 쿼리 실행
+        question = QuizQuestion.query.get(question_id)
+        return question.question if question else "Unknown question"
+
+def get_answer(question_id, answer_index):
+    from app import app  # app 객체 임포트
+    with app.app_context():  # Flask 애플리케이션 컨텍스트 내에서 쿼리 실행
+        question = QuizQuestion.query.get(question_id)
+        if question:
+            options = QuizOption.query.filter_by(question_id=question_id).all()
+            if 0 <= answer_index < len(options):
+                return options[answer_index].option_text
+    return "Unknown answer"
 
 def generate_profile(answer_indices):
-    nickname_answers = []
-    marriage_answers = []
+    nickname_answers = answer_indices[:7]  # 5~11번 질문 (7개)
+    marriage_answers = answer_indices[7:]  # 12~18번 질문 (7개)
 
-    for i, answer_index in enumerate(answer_indices):
-        if answer_index < 0 or answer_index >= 4:
-            raise ValueError(f"Invalid answer index for question {i + 1}")
-
-        nickname_answers.append(Nickname_Question_Answers[i]["answers"][answer_index])
-        marriage_answers.append(Marriage_Question_Answers[i]["answers"][answer_index])
-
-    nickname_prompt = "\n".join(
-        [f"Q{i + 1}: {Nickname_Question_Answers[i]['question']}\nA{i + 1}: {answer}" for i, answer in
-         enumerate(nickname_answers)])
+    nickname_prompt = "\n".join([f"Q{i + 5}: {get_question(i + 5)}\nA: {get_answer(i + 5, answer)}" for i, answer in enumerate(nickname_answers)])
     nickname_prompt += "\n위의 답변을 바탕으로 닉네임을 생성해줘."
 
-    marriage_prompt = "\n".join(
-        [f"Q{i + 1}: {Marriage_Question_Answers[i]['question']}\nA{i + 1}: {answer}" for i, answer in
-         enumerate(marriage_answers)])
+    marriage_prompt = "\n".join([f"Q{i + 12}: {get_question(i + 12)}\nA: {get_answer(i + 12, answer)}" for i, answer in enumerate(marriage_answers)])
     marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해줘."
 
     nickname = generate_nickname(nickname_prompt)
@@ -38,9 +50,9 @@ def generate_profile(answer_indices):
         "marriage_conditions": marriage_conditions
     }
 
-
 def generate_nickname(prompt):
-    response = openai.ChatCompletion.create(
+    client = openai.OpenAI(api_key=API_KEY) #초기화
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "너는 연애& 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
@@ -51,10 +63,11 @@ def generate_nickname(prompt):
         temperature=0.7,
         max_tokens=100
     )
-    return response.choices[0].message['content'].strip()
+    return response.choices[0].message.content.strip()
 
 def generate_marriage_conditions(prompt):
-    response = openai.ChatCompletion.create(
+    client = openai.OpenAI(api_key=API_KEY) #초기화
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "너는 연애와 결혼에 관련된 조건을 생성하는 분석적인 전문가야"},
@@ -65,4 +78,4 @@ def generate_marriage_conditions(prompt):
         temperature=0.7,
         max_tokens=150
     )
-    return response.choices[0].message['content'].strip().split('\n')
+    return response.choices[0].message.content.strip().split('\n')

@@ -6,12 +6,12 @@ profile_ns = Namespace("profile", description="프로필 생성 API")
 
 # JSON 요청 파서 설정
 profile_upload_parser = profile_ns.parser()
-for i in range(7):
+for i in range(5, 19):
     profile_upload_parser.add_argument(
-        f"q{i+1}",
+        f"q{i}",
         type=int,
         required=True,
-        help=f"질문 {i+1} 번에 대한 응답은 공백이 불가합니다"
+        help=f"질문 {i} 번에 대한 응답은 공백이 불가합니다"
     )
 
 # 컨트롤러와 연결 (Swagger에서 profile_upload_parser 사용)
