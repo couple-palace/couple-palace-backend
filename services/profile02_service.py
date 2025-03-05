@@ -55,7 +55,7 @@ def generate_profile(answer_indices):
 
 def generate_nickname(prompt):
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "너는 연애& 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
             {"role": "system", "content": "'밈 감성 형용사 + 트렌디한 행동 패턴 + 직업 또는 특성'의 구조로 재미있는 닉네임을 지어줘"},
@@ -69,7 +69,7 @@ def generate_nickname(prompt):
 
 def generate_marriage_conditions(prompt):
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "너는 연애와 결혼에 관련된 조건을 생성하는 분석적인 전문가야"},
             {"role": "system", "content": "트렌디하고 트위터에 돌아다닐만한 말투로, 개웃기게 해줘"},
