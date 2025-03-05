@@ -10,6 +10,9 @@ load_dotenv()
 
 API_KEY = os.environ.get('API_KEY')
 
+# OpenAI 클라이언트 초기화
+client = openai.OpenAI(api_key=API_KEY)
+
 # Flask 애플리케이션 초기화 (app.py에서 생성한 app 객체 사용)
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')}"  # config.py에서 가져오기
@@ -51,7 +54,6 @@ def generate_profile(answer_indices):
     }
 
 def generate_nickname(prompt):
-    client = openai.OpenAI(api_key=API_KEY) #초기화
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -66,7 +68,6 @@ def generate_nickname(prompt):
     return response.choices[0].message.content.strip()
 
 def generate_marriage_conditions(prompt):
-    client = openai.OpenAI(api_key=API_KEY) #초기화
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
