@@ -4,7 +4,7 @@ from flask import Blueprint
 from flask_restx import Api
 from routes.photo_routes import photo_ns
 from routes.profile_routes import profile_ns
-
+from flask_sqlalchemy import SQLAlchemy
 
 # Blueprint 생성
 api_v1 = Blueprint("api_v1", __name__, url_prefix="/api/v1")

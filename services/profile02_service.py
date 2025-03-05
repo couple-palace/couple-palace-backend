@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from couple_palace_backend.models.quiz_models import QuizQuestion, QuizOption
+from models.quiz_models import QuizQuestion, QuizOption
 
 # .env 파일 로드
 load_dotenv()
@@ -63,7 +63,7 @@ def generate_nickname(prompt):
             {"role": "user", "content": prompt}
         ],
         temperature=0.7,
-        max_tokens=100
+        max_tokens=300
     )
     return response.choices[0].message.content.strip()
 
