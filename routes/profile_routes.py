@@ -6,7 +6,7 @@ profile_ns = Namespace("profile", description="프로필 생성 API")
 
 # JSON 요청 파서 설정
 profile_upload_parser = profile_ns.parser()
-for i in range(5, 19):
+for i in range(1, 19):
     profile_upload_parser.add_argument(
         f"q{i}",
         type=int,
