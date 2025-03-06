@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #1b1b2f; /* 짙은 네이비 톤 */
+            color: #eee; /* 글자색 */
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #c8a97e; /* 골드 톤 */
+        }
+        button {
+            background-color: #c8a97e; /* 골드 톤 버튼 */
+            border: none;
+            color: #1b1b2f;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #b8936f;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 이미지 표시 -->
+
+    <img src="{{ url_for('static', filename='images/couplegungjeon.png') }}"
+         alt="커플궁전 로고" style="width: 300px; margin-top: 50px;">
+
+    <h1>Welcome to the API!</h1>
+    <a href="{{ swagger_url }}">
+        <button>Swagger API Documentation</button>
+    </a>
+    <a href="{{ quiz_table_url }}">
+        <button>View Quiz List</button>
+    </a>
+</body>
+</html>

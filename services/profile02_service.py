@@ -1,14 +1,15 @@
 import openai
-from dotenv import load_dotenv
+from data.question import Nickname_Question_Answers, Marriage_Question_Answers
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from couple_palace_backend.models.quiz_models import QuizQuestion, QuizOption
+from models.quiz_models import QuizQuestion, QuizOption
 
-# .env 파일 로드
-load_dotenv()
+# load .env
+# load_dotenv()
 
-API_KEY = os.environ.get('API_KEY')
+# API_KEY = os.environ.get('API_KEY')
+API_KEY = os.getenv("API_KEY")
 
 # OpenAI 클라이언트 초기화
 client = openai.OpenAI(api_key=API_KEY)
