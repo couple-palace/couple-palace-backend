@@ -8,3 +8,4 @@ openai>=1.0.0
 Flask-SQLAlchemy
 pymysql
 google-cloud-secret-manager
+python-dotenv
