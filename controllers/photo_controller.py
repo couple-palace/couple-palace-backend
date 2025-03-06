@@ -4,8 +4,8 @@ from werkzeug.datastructures import FileStorage
 import os
 from services.photo_service import process_image
 
-upload_parser = reqparse.RequestParser()
-upload_parser.add_argument(
+photo_upload_parser = reqparse.RequestParser()
+photo_upload_parser.add_argument(
     "content_image",
     location="files",
     type=FileStorage,
@@ -15,7 +15,7 @@ upload_parser.add_argument(
 
 class PhotoController(Resource):
     def post(self):
-        args = upload_parser.parse_args()
+        args = photo_upload_parser.parse_args()
         content_file = args.get("content_image")
 
         # 빈 파일명 검사
