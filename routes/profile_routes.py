@@ -15,26 +15,17 @@ profile_ns = Namespace("profile", description="프로필 생성 API")
 #         location="json"
 #     )
 
-# 요청 본문의 JSON 구조 모델 정의 (q1 ~ q18)
+# 요청 본문의 JSON 구조 모델 정의
+# 각 질문은 question_idx, answer_idx, type으로 구성된 객체로 나타내며,
+# 전체 요청은 questionsList (질문 객체들의 리스트)와 job (직업 정보)를 포함
+question_model = profile_ns.model('Question', {
+    'question_idx': fields.Integer(required=True, description='질문 번호 (정수)'),
+    'answer_idx': fields.Integer(required=True, description='응답 인덱스 (정수)'),
+    'type': fields.String(required=True, description='질문 유형')
+})
 profile_model = profile_ns.model('ProfileRequest', {
-    'q1': fields.Integer(required=True, description='질문 1 응답 (정수)'),
-    'q2': fields.Integer(required=True, description='질문 2 응답 (정수)'),
-    'q3': fields.Integer(required=True, description='질문 3 응답 (정수)'),
-    'q4': fields.Integer(required=True, description='질문 4 응답 (정수)'),
-    'q5': fields.Integer(required=True, description='질문 5 응답 (정수)'),
-    'q6': fields.Integer(required=True, description='질문 6 응답 (정수)'),
-    'q7': fields.Integer(required=True, description='질문 7 응답 (정수)'),
-    'q8': fields.Integer(required=True, description='질문 8 응답 (정수)'),
-    'q9': fields.Integer(required=True, description='질문 9 응답 (정수)'),
-    'q10': fields.Integer(required=True, description='질문 10 응답 (정수)'),
-    'q11': fields.Integer(required=True, description='질문 11 응답 (정수)'),
-    'q12': fields.Integer(required=True, description='질문 12 응답 (정수)'),
-    'q13': fields.Integer(required=True, description='질문 13 응답 (정수)'),
-    'q14': fields.Integer(required=True, description='질문 14 응답 (정수)'),
-    'q15': fields.Integer(required=True, description='질문 15 응답 (정수)'),
-    'q16': fields.Integer(required=True, description='질문 16 응답 (정수)'),
-    'q17': fields.Integer(required=True, description='질문 17 응답 (정수)'),
-    'q18': fields.Integer(required=True, description='질문 18 응답 (정수)')
+    'questionsList': fields.List(fields.Nested(question_model), required=True, description='질문 리스트'),
+    'job': fields.String(required=True, description='직업 정보')
 })
 
 # 컨트롤러와 연결 (Swagger에 JSON body로 표시됨)
