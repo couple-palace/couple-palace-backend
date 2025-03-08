@@ -50,9 +50,9 @@ class ProfileController(Resource):
             try:
                 ####################################################################
                 # generate_profile 함수는 answer_indices를 이용해 프로필 생성 (추후 수정 필요)
-                profile = generate_profile(answer_indices)
+                #profile = generate_profile(answer_indices)
                 # # generate_profile 함수는 answer_indices와 job을 사용해 프로필을 생성합니다.
-                # profile = generate_profile(answer_indices, job)
+                profile = generate_profile(answer_indices, job)
                 ####################################################################
 
                 return profile, 200
