@@ -4,15 +4,23 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from models.quiz_models import QuizQuestion, QuizOption
+import requests
+import os
 
+# 환경 변수에서 API_KEY 가져오기
 API_KEY = os.getenv("API_KEY")
 
-if API_KEY is None:
-    from dotenv import load_dotenv
-    # load .env
-    load_dotenv()
-    API_KEY = os.environ.get('API_KEY')
+# 환경 변수에 없으면 GCP Cloud Metadata에서 가져오기
+if not API_KEY:
+    try:
+        API_KEY = requests.get(
+            "http://metadata.google.internal/computeMetadata/v1/project/attributes/API_KEY",
+            headers={"Metadata-Flavor": "Google"}
+        ).text.strip()
+    except requests.exceptions.RequestException:
+        API_KEY = None
 
+# API_KEY가 없으면 오류 발생
 if not API_KEY:
     raise ValueError("OPENAI API KEY가 설정되지 않았습니다! 환경 변수를 확인하세요.")
 
