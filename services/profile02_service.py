@@ -9,14 +9,19 @@ API_KEY = os.getenv("API_KEY")
 
 if API_KEY is None:
     from dotenv import load_dotenv
+    # load .env
     load_dotenv()
     API_KEY = os.environ.get('API_KEY')
 
+# OpenAI 클라이언트 초기화
 client = openai.OpenAI(api_key=API_KEY)
 
+# Flask 애플리케이션 초기화 (app.py에서 생성한 app 객체 사용)
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')}" #config.py에서 가지고 오기
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')}"  # config.py에서 가져오기
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)  # app.py에서 초기화하므로 주석 처리
+
 
 def get_question(question_id):
     from app import app
