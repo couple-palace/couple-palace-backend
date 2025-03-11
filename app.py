@@ -1,7 +1,7 @@
 # app.py
 
 import os
-from flask import Flask, render_template
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 from routes.home_routes import home_bp
@@ -29,6 +29,11 @@ CORS(
         "https://localhost",
     ],
 )
+
+# Health Check 엔드포인트 추가
+@app.route("/healthz")
+def health_check():
+    return jsonify(status="ok"), 200
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
