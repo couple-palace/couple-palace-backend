@@ -13,6 +13,9 @@ if API_KEY is None:
     load_dotenv()
     API_KEY = os.environ.get('API_KEY')
 
+if not API_KEY:
+    raise ValueError("OPENAI API KEY가 설정되지 않았습니다! 환경 변수를 확인하세요.")
+
 # OpenAI 클라이언트 초기화
 client = openai.OpenAI(api_key=API_KEY)
 
