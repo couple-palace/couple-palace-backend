@@ -1,8 +1,12 @@
 import openai
 from flask import Flask
+
+from config import load_secrets
 from models.quiz_models import QuizQuestion, QuizOption
 import requests
 import os
+
+load_secrets()
 
 # 환경 변수에서 API_KEY 가져오기
 API_KEY = os.getenv("API_KEY")
@@ -91,7 +95,7 @@ def generate_nickname(prompt, job):
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "너는 연애& 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
-            {"role": "system", "content": f"'밈 감성 형용사 + 트렌디한 행동 패턴 + {job}'의 구조로 재미있는 닉네임을 지어줘"},
+            {"role": "system", "content": f"'밈 감성 형용사 + 트렌디한 행동 패턴 + {job}'의 구조로 해줘, 입력받은 {job}은 무조건 출력해줘"},
             {"role": "system", "content": "'아내의 집밥 먹고 싶은 인테리어 대표' 와 같이 50자 이내로 해줘"},
             {"role": "user", "content": prompt}
         ],
