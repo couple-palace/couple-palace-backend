@@ -1,8 +1,5 @@
 import openai
-from flask.cli import load_dotenv
-import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from models.quiz_models import QuizQuestion, QuizOption
 import requests
 import os
@@ -51,24 +48,43 @@ def get_answer(question_id, answer_index):
     return "Unknown answer"
 
 def generate_profile(answer_indices,job):
-    nickname_answers = answer_indices[:7] # 5~11번 질문 사용
-    marriage_answers = answer_indices[7:] # 12~18번 질문 사용
+    # MBTI
+    mbti_answers = answer_indices[:4]  # 1~4번 질문
+    mbti = generate_mbti(mbti_answers)
 
+    # NICK
+    nickname_answers = answer_indices[4:11]  # 5~11번 질문
     nickname_prompt = "\n".join([f"Q{i + 5}: {get_question(i + 5)}\nA: {get_answer(i + 5, answer)}" for i, answer in
                                  enumerate(nickname_answers)])
     nickname_prompt += "\n위의 답변을 바탕으로 닉네임을 생성해줘."
+    nickname = generate_nickname(nickname_prompt, job)
 
+    # COND
+    marriage_answers = answer_indices[11:]  # 12~18번 질문
     marriage_prompt = "\n".join([f"Q{i + 12}: {get_question(i + 12)}\nA: {get_answer(i + 12, answer)}" for i, answer in
                                  enumerate(marriage_answers)])
     marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해줘."
-
-    nickname = generate_nickname(nickname_prompt, job)
     marriage_conditions = generate_marriage_conditions(marriage_prompt)
 
     return {
+        "mbti": mbti,
         "nickname": nickname,
         "marriage_conditions": marriage_conditions
+
     }
+
+def generate_mbti(mbti_answers):
+    # MBTI 매핑 테이블 (질문 ID 별 옵션 순서대로 MBTI 요소)
+    mbti_mapping = {
+        1: ["E", "I", "E", "I"],  # E/I 결정
+        2: ["S", "N", "S", "N"],  # S/N 결정
+        3: ["F", "F", "T", "T"],  # F/T 결정
+        4: ["J", "P", "J", "P"]   # P/J 결정
+    }
+
+    # MBTI 코드 조합
+    mbti_result = "".join(mbti_mapping[q_id][answer_idx] for q_id, answer_idx in enumerate(mbti_answers, start=1))
+    return mbti_result
 
 def generate_nickname(prompt, job):
     response = client.chat.completions.create(
@@ -94,6 +110,6 @@ def generate_marriage_conditions(prompt):
             {"role": "user", "content": prompt}
         ],
         temperature=0.7,
-        max_tokens=300
+        max_tokens=500
     )
     return response.choices[0].message.content.strip().split('\n')

@@ -31,7 +31,7 @@ class ProfileController(Resource):
                     question_idx = int(q["question_idx"])
                     answer_idx = int(q["answer_idx"])
                 except ValueError:
-                    abort(400, "400-08: question_idx와 answer_idx는 정수여야 합니다") # 400-08: question_idx와 answer_idx는 정수여야 합니다
+                    abort(400, "400-09: question_idx와 answer_idx는 정수여야 합니다") # 400-09: question_idx와 answer_idx는 정수여야 합니다
 
                 # 검증 후 answer_data에 값 저장 (key는 "q{question_idx}" 형태)
                 answer_data[f"q{question_idx}"] = answer_idx
@@ -41,9 +41,15 @@ class ProfileController(Resource):
             for i in range(1, 19):
                 key = f"q{i}"
                 if key not in answer_data:
-                    abort(400, f"400-09: 질문 {i} 번에 대한 응답이 누락되었습니다")  # 400-09: 질문 {i} 번에 대한 응답이 누락되었습니다
+                    abort(400, f"400-10: 질문 {i} 번에 대한 응답이 누락되었습니다")  # 400-10: 질문 {i} 번에 대한 응답이 누락되었습니다
+
+            ####################################################################
             # 서비스에는 기존과 같이 5번부터 18번까지의 응답 인덱스만 전달 (추후 수정 필요)
-            answer_indices = [answer_data[f"q{i}"] for i in range(5, 19)]
+            # answer_indices = [answer_data[f"q{i}"] for i in range(5, 19)]
+            # answer_indices.append(answer_data[key])
+
+            # 수정 완료: (1,19)번 들어갈수있도록함
+            answer_indices = [answer_data[f"q{i}"] for i in range(1, 19)]
             answer_indices.append(answer_data[key])
             ####################################################################
 
@@ -51,7 +57,8 @@ class ProfileController(Resource):
                 ####################################################################
                 # generate_profile 함수는 answer_indices를 이용해 프로필 생성 (추후 수정 필요)
                 #profile = generate_profile(answer_indices)
-                # # generate_profile 함수는 answer_indices와 job을 사용해 프로필을 생성합니다.
+
+                # 수정 완료: generate_profile 함수는 answer_indices와 job을 사용해 프로필을 생성합니다.
                 profile = generate_profile(answer_indices, job)
                 ####################################################################
 
@@ -78,15 +85,12 @@ class ProfileController(Resource):
             args = profile_parser.parse_args()
 
             ####################################################################
-            ####################################################################
-            ####################################################################
-            # MBTI 추가 로직 필요 (추후 수정)
-            ####################################################################
-            ####################################################################
-            ####################################################################
+            # 서비스에는 기존과 같이 5번부터 18번까지의 응답 인덱스만 전달합니다. (추후 수정 필요)
+            # answer_indices = [args[f"q{i}"] for i in range(5, 19)]
 
-            # 서비스에는 기존과 같이 5번부터 18번까지의 응답 인덱스만 전달합니다.
-            answer_indices = [args[f"q{i}"] for i in range(5, 19)]
+            # 수정 완료: MBTI 로직 추가
+            answer_indices = [args[f"q{i}"] for i in range(1, 19)]
+            ####################################################################
 
             try:
                 profile = generate_profile(answer_indices)

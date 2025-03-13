@@ -23,13 +23,55 @@ question_model = profile_ns.model('Question', {
     'answer_idx': fields.Integer(required=True, description='응답 인덱스 (정수)'),
     'type': fields.String(required=True, description='질문 유형')
 })
+
 profile_model = profile_ns.model('ProfileRequest', {
     'questionsList': fields.List(fields.Nested(question_model), required=True, description='질문 리스트'),
     'job': fields.String(required=True, description='직업 정보')
 })
 
+example_data = {
+    "questionsList": [
+        {"question_idx": 1, "answer_idx": 2, "type": "MBTI"},
+        {"question_idx": 2, "answer_idx": 1, "type": "MBTI"},
+        {"question_idx": 3, "answer_idx": 0, "type": "MBTI"},
+        {"question_idx": 4, "answer_idx": 3, "type": "MBTI"},
+        {"question_idx": 5, "answer_idx": 2, "type": "NICK"},
+        {"question_idx": 6, "answer_idx": 1, "type": "NICK"},
+        {"question_idx": 7, "answer_idx": 0, "type": "NICK"},
+        {"question_idx": 8, "answer_idx": 2, "type": "NICK"},
+        {"question_idx": 9, "answer_idx": 3, "type": "NICK"},
+        {"question_idx": 10, "answer_idx": 1, "type": "NICK"},
+        {"question_idx": 11, "answer_idx": 0, "type": "NICK"},
+        {"question_idx": 12, "answer_idx": 2, "type": "COND"},
+        {"question_idx": 13, "answer_idx": 1, "type": "COND"},
+        {"question_idx": 14, "answer_idx": 0, "type": "COND"},
+        {"question_idx": 15, "answer_idx": 3, "type": "COND"},
+        {"question_idx": 16, "answer_idx": 2, "type": "COND"},
+        {"question_idx": 17, "answer_idx": 1, "type": "COND"},
+        {"question_idx": 18, "answer_idx": 0, "type": "COND"}
+    ],
+    "job": "engineer"
+}
+
 # 컨트롤러와 연결 (Swagger에 JSON body로 표시됨)
 @profile_ns.route("/generate/pf")
 @profile_ns.expect(profile_model, validate=True)
+@profile_ns.doc(
+    description="""
+    입력 예시 아카이브: [https://www.notion.so/clicelee/1b5643ab4a9f808fa236dfb99b5ae128?pvs=4](https://www.notion.so/clicelee/1b5643ab4a9f808fa236dfb99b5ae128?pvs=4)
+    """,
+    responses={
+        200: "",
+        400: "\n✅ 400-04: JSON 본문이 필요합니다"
+        + "\n✅ 400-05: 각 질문은 객체여야 합니다"
+        + "\n✅ 400-06: 각 질문은 '{key}'를 포함해야 합니다"
+        + "\n✅ 400-07: 프로필을 생성할 수 없습니다"
+        + "\n✅ 400-08: questionsList는 리스트여야 합니다"
+        + "\n✅ 400-09: question_idx와 answer_idx는 정수여야 합니다"
+        + "\n✅ 400-10: 질문 {i} 번에 대한 응답이 누락되었습니다",
+        500: "\n✅ 500-00: 서버 내부 오류가 발생했습니다"
+    },
+    params={},
+)
 class ProfileResource(ProfileController):
     pass
