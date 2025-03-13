@@ -1,8 +1,12 @@
 import openai
 from flask import Flask
+
+from config import load_secrets
 from models.quiz_models import QuizQuestion, QuizOption
 import requests
 import os
+
+load_secrets()
 
 # 환경 변수에서 API_KEY 가져오기
 API_KEY = os.getenv("API_KEY")
