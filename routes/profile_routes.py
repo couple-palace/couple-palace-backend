@@ -29,30 +29,6 @@ profile_model = profile_ns.model('ProfileRequest', {
     'job': fields.String(required=True, description='직업 정보')
 })
 
-example_data = {
-    "questionsList": [
-        {"question_idx": 1, "answer_idx": 2, "type": "MBTI"},
-        {"question_idx": 2, "answer_idx": 1, "type": "MBTI"},
-        {"question_idx": 3, "answer_idx": 0, "type": "MBTI"},
-        {"question_idx": 4, "answer_idx": 3, "type": "MBTI"},
-        {"question_idx": 5, "answer_idx": 2, "type": "NICK"},
-        {"question_idx": 6, "answer_idx": 1, "type": "NICK"},
-        {"question_idx": 7, "answer_idx": 0, "type": "NICK"},
-        {"question_idx": 8, "answer_idx": 2, "type": "NICK"},
-        {"question_idx": 9, "answer_idx": 3, "type": "NICK"},
-        {"question_idx": 10, "answer_idx": 1, "type": "NICK"},
-        {"question_idx": 11, "answer_idx": 0, "type": "NICK"},
-        {"question_idx": 12, "answer_idx": 2, "type": "COND"},
-        {"question_idx": 13, "answer_idx": 1, "type": "COND"},
-        {"question_idx": 14, "answer_idx": 0, "type": "COND"},
-        {"question_idx": 15, "answer_idx": 3, "type": "COND"},
-        {"question_idx": 16, "answer_idx": 2, "type": "COND"},
-        {"question_idx": 17, "answer_idx": 1, "type": "COND"},
-        {"question_idx": 18, "answer_idx": 0, "type": "COND"}
-    ],
-    "job": "engineer"
-}
-
 # 컨트롤러와 연결 (Swagger에 JSON body로 표시됨)
 @profile_ns.route("/generate/pf")
 @profile_ns.expect(profile_model, validate=True)
@@ -71,7 +47,6 @@ example_data = {
         + "\n✅ 400-10: 질문 {i} 번에 대한 응답이 누락되었습니다",
         500: "\n✅ 500-00: 서버 내부 오류가 발생했습니다"
     },
-    params={},
 )
 class ProfileResource(ProfileController):
     pass
