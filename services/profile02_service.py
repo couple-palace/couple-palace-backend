@@ -94,15 +94,18 @@ def generate_nickname(prompt, job):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "너는 연애& 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
-            {"role": "system", "content": f"'밈 감성 형용사 + 트렌디한 행동 패턴 + {job}'의 구조로 해줘, 입력받은 {job}은 무조건 출력해줘"},
-            {"role": "system", "content": "'아내의 집밥 먹고 싶은 인테리어 대표' 와 같이 50자 이내로 해줘"},
+            {"role": "system", "content": "너는 연애 & 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
+            {"role": "system", "content": "밈 감성, 트렌디한 형태의 형용사 또는 명사로 출력해줘"},
+            {"role": "system", "content": "예를들어 '아내의 집밥 먹고 싶은', '지고지순 순정파','철학을 사랑한' 와 같이 50자 이내의 1개 닉네임을 지어줘"},
             {"role": "user", "content": prompt}
         ],
         temperature=0.7,
-        max_tokens=150
+        max_tokens=100
     )
-    return response.choices[0].message.content.strip()
+
+    nickname1 = response.choices[0].message.content.strip()
+    return f"{nickname1} {job}"
+
 
 def generate_marriage_conditions(prompt):
     response = client.chat.completions.create(
