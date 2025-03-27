@@ -5,6 +5,10 @@ on:
     branches:
       - develop/main
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   auto-format:
     runs-on: ubuntu-latest
@@ -28,12 +32,3 @@ jobs:
         run: |
           git config user.name "gh-action-black"
           git config user.email "action@github.com"
-
-      - name: Create Pull Request if changes
-        uses: peter-evans/create-pull-request@v5
-        with:
-          commit-message: "style: auto-format with black"
-          title: "style: auto-format with black"
-          body: |
-            This PR auto-formats the code using `black` to maintain consistent style.
-          branch: auto/black-fix
