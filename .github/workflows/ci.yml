@@ -1,17 +1,17 @@
-name: Code Style Check
+name: Auto Black Format and PR
 
 on:
-  push:
+  pull_request:
     branches:
       - develop/main
-  pull_request:
 
 jobs:
-  format-check:
+  auto-format:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -21,5 +21,19 @@ jobs:
       - name: Install Black
         run: pip install black==22.3.0
 
-      - name: Run Black
-        run: black --check app.py
+      - name: Run Black auto format
+        run: black .
+
+      - name: Configure Git
+        run: |
+          git config user.name "gh-action-black"
+          git config user.email "action@github.com"
+
+      - name: Create Pull Request if changes
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "style: auto-format with black"
+          title: "style: auto-format with black"
+          body: |
+            This PR auto-formats the code using `black` to maintain consistent style.
+          branch: auto/black-fix

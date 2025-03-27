@@ -6,6 +6,9 @@ on:
       - deploy
 
 env:
+  FLASK_SECRET_KEY: ${{ secrets.FLASK_SECRET_KEY }}
+  DB_URI: ${{ secrets.DB_URI }}
+  API_KEY: ${{ secrets.API_KEY }}
   DOCKER_IMAGE: couple-palace-web
 
 jobs:
@@ -26,7 +29,7 @@ jobs:
             cd ~/app/git
 
             echo "[1] Pull latest changes"
-            git pull origin main
+            git pull origin deploy
 
             echo "[2] Stop & remove old container"
             docker stop my-container || true
@@ -35,5 +38,11 @@ jobs:
             echo "[3] Build Docker image"
             docker build -t $DOCKER_IMAGE .
 
-            echo "[4] Run new container"
-            docker run -d -p 5000:5000 --name my-container $DOCKER_IMAGE
+            echo "[4] Run new container with injected secrets"
+            docker run -d \
+              -e FLASK_SECRET_KEY=$FLASK_SECRET_KEY \
+              -e DB_URI=$DB_URI \
+              -e API_KEY=$API_KEY \
+              -p 5000:5000 \
+              --name my-container \
+              $DOCKER_IMAGE
