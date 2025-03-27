@@ -12,7 +12,7 @@ photo_upload_parser.add_argument(
     location="files",
     type=FileStorage,
     required=True,
-    help="배경을 제거할 이미지 파일 (JPEG, PNG 지원)"
+    help="배경을 제거할 이미지 파일 (JPEG, PNG 지원)",
 )
 
 # 컨트롤러와 연결 (Swagger에서 photo_upload_parser 사용)

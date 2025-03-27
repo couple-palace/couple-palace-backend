@@ -10,7 +10,7 @@ def get_all_questions():
             "id": q.id,
             "type": q.type,
             "question": q.question,
-            "options": [option.option_text for option in q.options]
+            "options": [option.option_text for option in q.options],
         }
         for q in questions
     ]

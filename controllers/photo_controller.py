@@ -10,8 +10,9 @@ photo_upload_parser.add_argument(
     location="files",
     type=FileStorage,
     required=True,
-    help="배경을 제거할 이미지 파일 (JPEG, PNG 지원)"
+    help="배경을 제거할 이미지 파일 (JPEG, PNG 지원)",
 )
+
 
 class PhotoController(Resource):
     def post(self):

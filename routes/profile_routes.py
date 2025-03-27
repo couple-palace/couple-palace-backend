@@ -18,16 +18,24 @@ profile_ns = Namespace("profile", description="프로필 생성 API")
 # 요청 본문의 JSON 구조 모델 정의
 # 각 질문은 question_idx, answer_idx, type으로 구성된 객체로 나타내며,
 # 전체 요청은 questionsList (질문 객체들의 리스트)와 job (직업 정보)를 포함
-question_model = profile_ns.model('Question', {
-    'question_idx': fields.Integer(required=True, description='질문 번호 (정수)'),
-    'answer_idx': fields.Integer(required=True, description='응답 인덱스 (정수)'),
-    'type': fields.String(required=True, description='질문 유형')
-})
+question_model = profile_ns.model(
+    "Question",
+    {
+        "question_idx": fields.Integer(required=True, description="질문 번호 (정수)"),
+        "answer_idx": fields.Integer(required=True, description="응답 인덱스 (정수)"),
+        "type": fields.String(required=True, description="질문 유형"),
+    },
+)
 
-profile_model = profile_ns.model('ProfileRequest', {
-    'questionsList': fields.List(fields.Nested(question_model), required=True, description='질문 리스트'),
-    'job': fields.String(required=True, description='직업 정보')
-})
+profile_model = profile_ns.model(
+    "ProfileRequest",
+    {
+        "questionsList": fields.List(
+            fields.Nested(question_model), required=True, description="질문 리스트"
+        ),
+        "job": fields.String(required=True, description="직업 정보"),
+    },
+)
 
 # 컨트롤러와 연결 (Swagger에 JSON body로 표시됨)
 @profile_ns.route("/generate/pf")
@@ -45,7 +53,7 @@ profile_model = profile_ns.model('ProfileRequest', {
         + "\n✅ 400-08: questionsList는 리스트여야 합니다"
         + "\n✅ 400-09: question_idx와 answer_idx는 정수여야 합니다"
         + "\n✅ 400-10: 질문 {i} 번에 대한 응답이 누락되었습니다",
-        500: "\n✅ 500-00: 서버 내부 오류가 발생했습니다"
+        500: "\n✅ 500-00: 서버 내부 오류가 발생했습니다",
     },
 )
 class ProfileResource(ProfileController):

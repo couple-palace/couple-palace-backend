@@ -35,10 +35,14 @@ CORS(
 def health_check():
     return jsonify(status="ok"), 200
 
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     print("🔍 TEMPLATE FOLDER PATH:", os.path.join(os.getcwd(), "templates"))
-    print("🔍 TEMPLATES EXISTS?:", os.path.exists(os.path.join(os.getcwd(), "templates/index.html")))
+    print(
+        "🔍 TEMPLATES EXISTS?:",
+        os.path.exists(os.path.join(os.getcwd(), "templates/index.html")),
+    )
     with app.app_context():
         print("🔧 Creating tables in SQLite database...")
         db.create_all()
