@@ -1,0 +1,25 @@
+name: Code Style Check
+
+on:
+  push:
+    branches:
+      - develop/main
+  pull_request:
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      - name: Install Black
+        run: pip install black==22.3.0
+
+      - name: Run Black
+        run: black --check app.py
