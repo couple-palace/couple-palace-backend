@@ -1,0 +1,48 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - deploy
+
+env:
+  FLASK_SECRET_KEY: ${{ secrets.FLASK_SECRET_KEY }}
+  DB_URI: ${{ secrets.DB_URI }}
+  API_KEY: ${{ secrets.API_KEY }}
+  DOCKER_IMAGE: couple-palace-web
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/app/git
+
+            echo "[1] Pull latest changes"
+            git pull origin deploy
+
+            echo "[2] Stop & remove old container"
+            docker stop my-container || true
+            docker rm my-container || true
+
+            echo "[3] Build Docker image"
+            docker build -t $DOCKER_IMAGE .
+
+            echo "[4] Run new container with injected secrets"
+            docker run -d \
+              -e FLASK_SECRET_KEY=$FLASK_SECRET_KEY \
+              -e DB_URI=$DB_URI \
+              -e API_KEY=$API_KEY \
+              -p 5000:5000 \
+              --name my-container \
+              $DOCKER_IMAGE
