@@ -11,9 +11,8 @@ from routes.common_routes import api_v1
 from config import Config
 from models import db
 from flask_cors import CORS
-
-metrics = PrometheusMetrics(app)
 app = Flask(__name__, template_folder="templates")
+metrics = PrometheusMetrics(app)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 
 app.config.from_object(Config)
