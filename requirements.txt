@@ -9,3 +9,4 @@ Flask-SQLAlchemy
 pymysql
 google-cloud-secret-manager
 python-dotenv
+prometheus_flask_exporter

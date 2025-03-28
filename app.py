@@ -3,6 +3,7 @@
 import os
 from flask import Flask, jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
+from prometheus_flask_exporter import PrometheusMetrics
 from flask_sqlalchemy import SQLAlchemy
 
 from routes.home_routes import home_bp
@@ -11,8 +12,8 @@ from config import Config
 from models import db
 from flask_cors import CORS
 
+metrics = PrometheusMetrics(app)
 app = Flask(__name__, template_folder="templates")
-
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 
 app.config.from_object(Config)
