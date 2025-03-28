@@ -1,3 +1,7 @@
+RUN mkdir -p /root/.u2net && \
+    wget https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx \
+         -O /root/.u2net/u2net.onnx \
+
 # Python 3.8 Slim 이미지 사용
 FROM python:3.8-slim
 
@@ -29,4 +33,4 @@ COPY . /app
 EXPOSE 5000
 
 # Gunicorn으로 실행하도록 변경 ✅
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "--forwarded-allow-ips", "*", "app:app"]
+CMD ["gunicorn", "-w", "2", "--preload", "-b", "0.0.0.0:5000", "--forwarded-allow-ips", "*", "app:app"]
