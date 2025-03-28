@@ -53,18 +53,21 @@ def get_answer(question_id, answer_index):
 
 def generate_profile(answer_indices,job):
     # MBTI
-    mbti_answers = answer_indices[:4]  # 1~4번 질문
+    # mbti_answers = answer_indices[:4]  # 1~4번 질문
+    mbti_answers = [answer for i, answer in enumerate(answer_indices) if get_question_type(i + 1) == "MBTI"]  # MBTI 타입의 질문만 추출
     mbti = generate_mbti(mbti_answers)
 
     # NICK
-    nickname_answers = answer_indices[4:11]  # 5~11번 질문
+    # nickname_answers = answer_indices[4:11]  # 5~11번 질문
+    nickname_answers = [answer for i, answer in enumerate(answer_indices) if get_question_type(i + 1) == "NICK"]  # NICK 타입의 질문만 추출
     nickname_prompt = "\n".join([f"Q{i + 5}: {get_question(i + 5)}\nA: {get_answer(i + 5, answer)}" for i, answer in
                                  enumerate(nickname_answers)])
     nickname_prompt += "\n위의 답변을 바탕으로 닉네임을 생성해줘."
     nickname = generate_nickname(nickname_prompt, job)
 
     # COND
-    marriage_answers = answer_indices[11:]  # 12~18번 질문
+    # marriage_answers = answer_indices[11:]  # 12~18번 질문
+    marriage_answers = [answer for i, answer in enumerate(answer_indices) if get_question_type(i + 1) == "COND"]  # COND 타입의 질문만 추출
     marriage_prompt = "\n".join([f"Q{i + 12}: {get_question(i + 12)}\nA: {get_answer(i + 12, answer)}" for i, answer in
                                  enumerate(marriage_answers)])
     marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해줘."
@@ -76,6 +79,14 @@ def generate_profile(answer_indices,job):
         "marriage_conditions": marriage_conditions
 
     }
+
+def get_question_type(question_number):
+    # 질문 번호를 기준으로 QuizQuestion 테이블에서 해당 질문을 조회합니다.
+    question = QuizQuestion.query.get(question_number)
+    if question is None:
+        # 질문 번호에 해당하는 질문이 없으면 None 혹은 적절한 기본값을 반환할 수 있습니다.
+        return None
+    return question.type
 
 def generate_mbti(mbti_answers):
     # MBTI 매핑 테이블 (질문 ID 별 옵션 순서대로 MBTI 요소)
