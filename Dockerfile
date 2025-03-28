@@ -29,4 +29,4 @@ COPY . /app
 EXPOSE 5000
 
 # Gunicorn으로 실행하도록 변경 ✅
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app", "--forwarded-allow-ips=*"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "--forwarded-allow-ips", "*", "app:app"]
