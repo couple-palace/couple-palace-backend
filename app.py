@@ -21,10 +21,10 @@ CORS(
     origins=[
         "https://www.couplegungjeon.store",
         "https://couplegungjeon.store",
-        "https://35.216.111.96",
+        "https://3.34.56.235",
         "http://www.couplegungjeon.store",
         "http://couplegungjeon.store",
-        "http://35.216.111.96",
+        "http://3.34.56.235",
         "http://localhost",
         "https://localhost",
     ],

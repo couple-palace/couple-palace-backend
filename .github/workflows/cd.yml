@@ -27,10 +27,15 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: FLASK_SECRET_KEY,DB_URI,API_KEY,DOCKER_IMAGE
           script: |
-            cd ~/app/git
+            echo "[0] Clone GitHub repo"
+            mkdir -p ~/app
+            cd ~/app
+            rm -rf git
+            git clone https://github.com/couple-palace/couple-palace-backend.git git
+            cd git
 
             echo "[1] Pull latest changes"
-            git pull origin deploy
+            git pull origin deploy || true
 
             echo "[2] Stop & remove old container"
             docker stop my-container || true
