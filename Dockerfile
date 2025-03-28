@@ -1,7 +1,3 @@
-RUN mkdir -p /root/.u2net && \
-    wget https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx \
-         -O /root/.u2net/u2net.onnx \
-
 # Python 3.8 Slim 이미지 사용
 FROM python:3.8-slim
 
@@ -13,10 +9,14 @@ RUN apt-get update && \
     apt-get install -y vim telnet wget && \
     rm -rf /var/lib/apt/lists/*
 
+# u2net 모델 다운로드
+RUN mkdir -p /root/.u2net && \
+    wget https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx -O /root/.u2net/u2net.onnx
+
 # 최신 pip 설치
 RUN python -m pip install --upgrade pip
 
-# Gunicorn 설치 추가 ✅
+# Gunicorn 설치
 RUN pip install gunicorn
 
 # 작업 디렉토리 설정
@@ -32,5 +32,5 @@ COPY . /app
 # 실행 포트 설정
 EXPOSE 5000
 
-# Gunicorn으로 실행하도록 변경 ✅
+# Gunicorn으로 실행
 CMD ["gunicorn", "-w", "2", "--preload", "-b", "0.0.0.0:5000", "--forwarded-allow-ips", "*", "app:app"]
