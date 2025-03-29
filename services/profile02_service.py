@@ -1,46 +1,34 @@
 import openai
 from flask import Flask
-
 from config import load_secrets
 from models.quiz_models import QuizQuestion, QuizOption
-import requests
 import os
 
+# 비밀 설정 로드
 load_secrets()
 
-# 환경 변수에서 API_KEY 가져오기
+# 환경 변수에서 API 키 가져오기
 API_KEY = os.getenv("API_KEY")
 
-# 환경 변수에 없으면 GCP Cloud Metadata에서 가져오기
-if not API_KEY:
-    try:
-        API_KEY = requests.get(
-            "http://metadata.google.internal/computeMetadata/v1/project/attributes/API_KEY",
-            headers={"Metadata-Flavor": "Google"}
-        ).text.strip()
-    except requests.exceptions.RequestException:
-        API_KEY = None
-
-# API_KEY가 없으면 오류 발생
 if not API_KEY:
     raise ValueError("OPENAI API KEY가 설정되지 않았습니다! 환경 변수를 확인하세요.")
 
 # OpenAI 클라이언트 초기화
 client = openai.OpenAI(api_key=API_KEY)
 
-# Flask 애플리케이션 초기화 (app.py에서 생성한 app 객체 사용)
+# Flask 앱 초기화
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')}"  # config.py에서 가져오기
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# db = SQLAlchemy(app)  # app.py에서 초기화하므로 주석 처리
 
-
+# 질문 조회
 def get_question(question_id):
     from app import app
     with app.app_context():
         question = QuizQuestion.query.get(question_id)
         return question.question if question else "Unknown question"
 
+# 보기 조회
 def get_answer(question_id, answer_index):
     from app import app
     with app.app_context():
@@ -51,56 +39,60 @@ def get_answer(question_id, answer_index):
                 return options[answer_index].option_text
     return "Unknown answer"
 
-def generate_profile(answer_indices,job):
-    # MBTI
-    # mbti_answers = answer_indices[:4]  # 1~4번 질문
-    mbti_answers = [answer for i, answer in enumerate(answer_indices) if get_question_type(i + 1) == "MBTI"]  # MBTI 타입의 질문만 추출
+# 질문 타입 조회
+def get_question_type(question_id):
+    question = QuizQuestion.query.get(question_id)
+    return question.type if question else None
+
+# 전체 프로필 생성
+def generate_profile(answer_list, job):
+    mbti_answers = []
+    nickname_prompts = []
+    marriage_prompts = []
+
+    for item in answer_list:
+        qid = item["question_idx"]
+        aidx = item["answer_idx"]
+        qtype = item["type"]
+
+        question_text = get_question(qid)
+        answer_text = get_answer(qid, aidx)
+
+        if qtype == "MBTI":
+            mbti_answers.append((qid, aidx))
+        elif qtype == "NICK":
+            nickname_prompts.append(f"Q{qid}: {question_text}\nA: {answer_text}")
+        elif qtype == "COND":
+            marriage_prompts.append(f"Q{qid}: {question_text}\nA: {answer_text}")
+
     mbti = generate_mbti(mbti_answers)
 
-    # NICK
-    # nickname_answers = answer_indices[4:11]  # 5~11번 질문
-    nickname_answers = [answer for i, answer in enumerate(answer_indices) if get_question_type(i + 1) == "NICK"]  # NICK 타입의 질문만 추출
-    nickname_prompt = "\n".join([f"Q{i + 5}: {get_question(i + 5)}\nA: {get_answer(i + 5, answer)}" for i, answer in
-                                 enumerate(nickname_answers)])
-    nickname_prompt += "\n위의 답변을 바탕으로 닉네임을 생성해줘."
+    nickname_prompt = "\n".join(nickname_prompts) + "\n위의 답변을 바탕으로 닉네임을 생성해줘."
     nickname = generate_nickname(nickname_prompt, job)
 
-    # COND
-    # marriage_answers = answer_indices[11:]  # 12~18번 질문
-    marriage_answers = [answer for i, answer in enumerate(answer_indices) if get_question_type(i + 1) == "COND"]  # COND 타입의 질문만 추출
-    marriage_prompt = "\n".join([f"Q{i + 12}: {get_question(i + 12)}\nA: {get_answer(i + 12, answer)}" for i, answer in
-                                 enumerate(marriage_answers)])
-    marriage_prompt += "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해줘."
+    marriage_prompt = "\n".join(marriage_prompts) + "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해줘."
     marriage_conditions = generate_marriage_conditions(marriage_prompt)
 
     return {
         "mbti": mbti,
         "nickname": nickname,
         "marriage_conditions": marriage_conditions
-
     }
 
-def get_question_type(question_number):
-    # 질문 번호를 기준으로 QuizQuestion 테이블에서 해당 질문을 조회합니다.
-    question = QuizQuestion.query.get(question_number)
-    if question is None:
-        # 질문 번호에 해당하는 질문이 없으면 None 혹은 적절한 기본값을 반환할 수 있습니다.
-        return None
-    return question.type
-
+# MBTI 생성
 def generate_mbti(mbti_answers):
-    # MBTI 매핑 테이블 (질문 ID 별 옵션 순서대로 MBTI 요소)
     mbti_mapping = {
-        1: ["E", "I", "E", "I"],  # E/I 결정
-        2: ["S", "N", "S", "N"],  # S/N 결정
-        3: ["F", "F", "T", "T"],  # F/T 결정
-        4: ["J", "P", "J", "P"]   # P/J 결정
+        1: ["E", "I", "E", "I"],
+        2: ["S", "N", "S", "N"],
+        3: ["F", "F", "T", "T"],
+        4: ["J", "P", "J", "P"]
     }
-
-    # MBTI 코드 조합
-    mbti_result = "".join(mbti_mapping[q_id][answer_idx] for q_id, answer_idx in enumerate(mbti_answers, start=1))
+    mbti_result = "".join(
+        mbti_mapping[qid][aidx] for qid, aidx in mbti_answers if qid in mbti_mapping
+    )
     return mbti_result
 
+# 닉네임 생성
 def generate_nickname(prompt, job):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -113,11 +105,10 @@ def generate_nickname(prompt, job):
         temperature=0.7,
         max_tokens=100
     )
-
     nickname1 = response.choices[0].message.content.strip()
     return f"{nickname1} {job}"
 
-
+# 결혼 조건 생성
 def generate_marriage_conditions(prompt):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
