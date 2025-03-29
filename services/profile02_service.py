@@ -98,7 +98,7 @@ def generate_nickname(prompt, job):
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "너는 연애 & 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
-            {"role": "system", "content": "밈 감성, 트렌디한 형태의 형용사 또는 명사로 출력해줘"},
+            {"role": "system", "content": "틱톡, 트위터, 인터넷 밈 감성, 트렌디한 형태의 형용사 또는 명사로 출력해주되, 주술관계, 목적어와의 호응이 자연스러워야 해"},
             {"role": "system", "content": "예를들어 '아내의 집밥 먹고 싶은', '지고지순 순정파','철학을 사랑한' 와 같이 50자 이내의 1개 닉네임을 지어줘"},
             {"role": "user", "content": f"{prompt}\n참고로 사용자의 직업은 '{job}'인데, 이걸 한국어로 자연스럽게 바꿔서 닉네임에 녹여줘."}
         ],
