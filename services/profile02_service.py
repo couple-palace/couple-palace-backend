@@ -100,13 +100,14 @@ def generate_nickname(prompt, job):
             {"role": "system", "content": "너는 연애 & 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
             {"role": "system", "content": "밈 감성, 트렌디한 형태의 형용사 또는 명사로 출력해줘"},
             {"role": "system", "content": "예를들어 '아내의 집밥 먹고 싶은', '지고지순 순정파','철학을 사랑한' 와 같이 50자 이내의 1개 닉네임을 지어줘"},
-            {"role": "user", "content": prompt}
+            {"role": "user", "content": f"{prompt}\n참고로 사용자의 직업은 '{job}'인데, 이걸 한국어로 자연스럽게 바꿔서 닉네임에 녹여줘."}
         ],
         temperature=0.7,
         max_tokens=100
     )
     nickname1 = response.choices[0].message.content.strip()
-    return f"{nickname1} {job}"
+    # return f"{nickname1} {job}"
+    return nickname1
 
 # 결혼 조건 생성
 def generate_marriage_conditions(prompt):
