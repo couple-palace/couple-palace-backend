@@ -115,6 +115,7 @@ def generate_marriage_conditions(prompt):
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "너는 연애와 결혼에 관련된 조건을 생성하는 분석적인 전문가야"},
+            {"role": "system", "content": "문장에서 ':' 부호 대신 '\n'으로 해줘"},
             {"role": "system", "content": "트렌디하고 트위터에 돌아다닐만한 말투로, 개웃기게 해줘"},
             {"role": "system", "content": "주어진 답변을 바탕으로 3가지의 독특하고 재미있는 결혼 조건을 생성해줘"},
             {"role": "user", "content": prompt}
