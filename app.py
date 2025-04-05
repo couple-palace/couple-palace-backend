@@ -1,6 +1,7 @@
 # app.py
 
 import os
+import logging
 from flask import Flask, jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
 from prometheus_flask_exporter import PrometheusMetrics
@@ -12,6 +13,13 @@ from config import Config
 from models import db
 from flask_cors import CORS
 app = Flask(__name__, template_folder="templates")
+
+# 로그 포맷 및 레벨 설정
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+app.logger.setLevel(logging.INFO)
+
+app.logger.info("Flask 앱 초기화 완료")
+
 metrics = PrometheusMetrics(app)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 
