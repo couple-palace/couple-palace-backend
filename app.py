@@ -31,7 +31,12 @@ CORS(
         "http://3.34.56.235",
         "http://localhost",
         "https://localhost",
+        "http://homepage.couplegungjeon.store",
+        "https://homepage.couplegungjeon.store",
     ],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    supports_credentials=True,
 )
 
 # Health Check 엔드포인트 추가
