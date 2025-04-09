@@ -79,28 +79,23 @@ def generate_profile(answer_list, job):
         "marriage_conditions": marriage_conditions
     }
 
-# MBTI 생성
 def generate_mbti(mbti_answers):
     mbti_mapping = {
-        1: ["E", "I", "E", "I"],  # E/I
-        4: ["S", "N", "S", "N"],  # S/N
-        3: ["F", "F", "T", "T"],  # T/F
-        11: ["J", "P", "J", "P"],  # J/P
+        1: ["E", "I", "E", "I"],     # E/I
+        4: ["S", "N", "S", "N"],     # S/N
+        3: ["F", "F", "T", "T"],     # T/F
+        11: ["J", "P", "J", "P"],    # J/P
     }
 
-    # 정해진 순서
-    ordered_qids = [1, 4, 3, 11]
-
-    # (qid -> aidx)로 변환
+    ordered_qids = [1, 4, 3, 11]  # 고정된 MBTI 순서
     answer_dict = {qid: aidx for qid, aidx in mbti_answers}
 
     mbti_result = ""
     for qid in ordered_qids:
         if qid in answer_dict:
-            aidx = answer_dict[qid]
-            mbti_result += mbti_mapping[qid][aidx]
+            mbti_result += mbti_mapping[qid][answer_dict[qid]]
         else:
-            mbti_result += "X"  # 빠진 항목 있을 경우 대비
+            mbti_result += "X"  # 누락 시 안전하게 처리
 
     return mbti_result
 
