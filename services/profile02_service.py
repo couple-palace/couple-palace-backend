@@ -82,23 +82,26 @@ def generate_profile(answer_list, job):
 # MBTI 생성
 def generate_mbti(mbti_answers):
     mbti_mapping = {
-        1: ["E", "I", "E", "I"],     # E/I
-        4: ["S", "N", "S", "N"],     # S/N
-        3: ["F", "F", "T", "T"],     # T/F
-        11: ["J", "P", "J", "P"],    # J/P
+        1: ["E", "I", "E", "I"],  # E/I
+        4: ["S", "N", "S", "N"],  # S/N
+        3: ["F", "F", "T", "T"],  # T/F
+        11: ["J", "P", "J", "P"],  # J/P
     }
 
-    # qid 순서 보장 (E/I → S/N → T/F → J/P)
+    # 정해진 순서
     ordered_qids = [1, 4, 3, 11]
 
-    sorted_answers = sorted(
-        [ans for ans in mbti_answers if ans[0] in mbti_mapping],
-        key=lambda x: ordered_qids.index(x[0])
-    )
+    # (qid -> aidx)로 변환
+    answer_dict = {qid: aidx for qid, aidx in mbti_answers}
 
-    mbti_result = "".join(
-        mbti_mapping[qid][aidx] for qid, aidx in sorted_answers
-    )
+    mbti_result = ""
+    for qid in ordered_qids:
+        if qid in answer_dict:
+            aidx = answer_dict[qid]
+            mbti_result += mbti_mapping[qid][aidx]
+        else:
+            mbti_result += "X"  # 빠진 항목 있을 경우 대비
+
     return mbti_result
 
 # 닉네임 생성
