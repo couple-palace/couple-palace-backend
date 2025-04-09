@@ -10,7 +10,7 @@ photo_upload_parser.add_argument(
     location="files",
     type=FileStorage,
     required=True,
-    help="배경을 제거할 이미지 파일 (JPEG, PNG 지원)"
+    help="배경을 제거할 이미지 파일 (JPEG, PNG, HEIC, HEIF 지원)"
 )
 
 class PhotoController(Resource):
@@ -30,7 +30,7 @@ class PhotoController(Resource):
         except Exception:
             abort(500, "500-00: 서버 내부 오류가 발생했습니다")  # 500-00: 서버 내부 오류가 발생했습니다
 
-        # 결과 이미지 반환 (JSON 응답 X, 이미지 파일 전송)
+        # 결과 이미지 반환 (파일 전송 후 임시 파일 삭제)
         try:
             return send_file(output_path, mimetype="image/png")  # 200: (이미지 전송)
         finally:

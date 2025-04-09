@@ -16,7 +16,7 @@ photo_upload_parser.add_argument(
 )
 
 # 컨트롤러와 연결 (Swagger에서 photo_upload_parser 사용)
-@photo_ns.route("/remove/bg")
+@photo_ns.route("/remove/bg", methods=["POST", "OPTIONS"])
 @photo_ns.expect(photo_upload_parser)
 class PhotoRemoveResource(PhotoController):
     pass

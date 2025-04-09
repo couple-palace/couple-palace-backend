@@ -1,6 +1,7 @@
 # app.py
 
 import os
+import logging
 from flask import Flask, jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
 from prometheus_flask_exporter import PrometheusMetrics
@@ -11,9 +12,15 @@ from routes.common_routes import api_v1
 from config import Config
 from models import db
 from flask_cors import CORS
+app = Flask(__name__, template_folder="templates")
+
+# 로그 포맷 및 레벨 설정
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+app.logger.setLevel(logging.INFO)
+
+app.logger.info("Flask 앱 초기화 완료")
 
 metrics = PrometheusMetrics(app)
-app = Flask(__name__, template_folder="templates")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 
 app.config.from_object(Config)
@@ -32,7 +39,12 @@ CORS(
         "http://3.34.56.235",
         "http://localhost",
         "https://localhost",
+        "http://homepage.couplegungjeon.store",
+        "https://homepage.couplegungjeon.store",
     ],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    supports_credentials=True,
 )
 
 # Health Check 엔드포인트 추가

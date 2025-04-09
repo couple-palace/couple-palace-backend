@@ -33,4 +33,4 @@ COPY . /app
 EXPOSE 5000
 
 # Gunicorn으로 실행
-CMD ["gunicorn", "-w", "2", "--preload", "-b", "0.0.0.0:5000", "--forwarded-allow-ips", "*", "app:app"]
+CMD ["gunicorn", "-w", "2", "--preload", "-b", "0.0.0.0:5000", "--forwarded-allow-ips", "*", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
