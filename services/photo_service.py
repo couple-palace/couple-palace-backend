@@ -26,6 +26,10 @@ def process_image(content_file):
             ).convert("RGBA")
         except Exception as e:
             raise ValueError(f"HEIC 이미지 변환에 실패했습니다: {str(e)}")
+    elif ext == 'gif':
+        gif = Image.open(content_file)
+        gif.seek(0)  # 첫 프레임만
+        content_image = gif.convert("RGBA")
     else:
         try:
             content_image = Image.open(content_file).convert("RGBA")

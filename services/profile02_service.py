@@ -82,13 +82,22 @@ def generate_profile(answer_list, job):
 # MBTI 생성
 def generate_mbti(mbti_answers):
     mbti_mapping = {
-        1: ["E", "I", "E", "I"],
-        2: ["S", "N", "S", "N"],
-        3: ["F", "F", "T", "T"],
-        4: ["J", "P", "J", "P"]
+        1: ["E", "I", "E", "I"],     # E/I
+        4: ["S", "N", "S", "N"],     # S/N
+        3: ["F", "F", "T", "T"],     # T/F
+        11: ["J", "P", "J", "P"],    # J/P
     }
+
+    # qid 순서 보장 (E/I → S/N → T/F → J/P)
+    ordered_qids = [1, 4, 3, 11]
+
+    sorted_answers = sorted(
+        [ans for ans in mbti_answers if ans[0] in mbti_mapping],
+        key=lambda x: ordered_qids.index(x[0])
+    )
+
     mbti_result = "".join(
-        mbti_mapping[qid][aidx] for qid, aidx in mbti_answers if qid in mbti_mapping
+        mbti_mapping[qid][aidx] for qid, aidx in sorted_answers
     )
     return mbti_result
 
