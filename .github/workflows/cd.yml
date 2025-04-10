@@ -31,6 +31,9 @@ jobs:
             echo "DB_URI=$DB_URI" >> .env
             echo "API_KEY=$API_KEY" >> .env
 
-            echo "[2] Start or restart containers"
+            echo "[2] Navigate to the project directory"
+            cd ~/app/couple-palace-backend # 디렉토리 이동
+
+            echo "[3] Start or restart containers"
             docker-compose down -v --remove-orphans || true
             docker-compose up --build -d
