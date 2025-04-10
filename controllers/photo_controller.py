@@ -1,7 +1,8 @@
-from flask_restx import Resource, reqparse, abort
+from flask_restx import Resource, reqparse
 from flask import send_file
 from werkzeug.datastructures import FileStorage
 import os
+from werkzeug.exceptions import InternalServerError
 from services.photo_service import process_image
 
 photo_upload_parser = reqparse.RequestParser()
@@ -20,15 +21,15 @@ class PhotoController(Resource):
 
         # 빈 파일명 검사
         if not content_file or content_file.filename == "":
-            abort(400, "400-01: 파일이 비어 있습니다")  # 400-01: 파일이 비어 있습니다
+            raise InternalServerError("400-01: 파일이 비어 있습니다")  # 400-01: 파일이 비어 있습니다
 
         # 이미지 처리 (배경 제거) 수행
         try:
             output_path = process_image(content_file)
         except ValueError:
-            abort(400, "400-02: 배경 제거에 실패했습니다")  # 400-02: 배경 제거에 실패했습니다
-        except Exception:
-            abort(500, "500-00: 서버 내부 오류가 발생했습니다")  # 500-00: 서버 내부 오류가 발생했습니다
+            raise InternalServerError("400-02: 배경 제거에 실패했습니다")  # 400-02: 배경 제거에 실패했습니다
+        except Exception as e:
+            raise InternalServerError(f"500-00: 서버 내부 오류가 발생했습니다: {str(e)}")  # 500-00: 서버 내부 오류가 발생했습니다
 
         # 결과 이미지 반환 (파일 전송 후 임시 파일 삭제)
         try:

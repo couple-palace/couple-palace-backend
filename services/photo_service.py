@@ -7,12 +7,24 @@ import pillow_heif
 # HEIF/HEIC 이미지 처리를 Pillow에서 가능하게 등록
 pillow_heif.register_heif_opener()
 
-MAX_WIDTH = 1024
-MAX_HEIGHT = 1024
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+ALLOWED_IMAGE_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'bmp', 'heif', 'heic'}
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+
 
 def process_image(content_file):
+    if content_file.content_length > MAX_FILE_SIZE:
+        raise Exception("파일 크기가 너무 큽니다. 최대 5MB 이하의 파일만 업로드 가능합니다.")
+
     filename = content_file.filename
     ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+
+    # 파일 확장자가 이미지 형식인지 체크
+    if not allowed_file(filename):
+        raise Exception("업로드된 파일이 이미지 형식이 아닙니다.")
 
     try:
         # 이미지 열기 (HEIC 포함 자동 인식됨)
@@ -23,10 +35,6 @@ def process_image(content_file):
             image.seek(0)
 
         image = image.convert("RGBA")
-
-        # 이미지 크기 제한
-        if image.width > MAX_WIDTH or image.height > MAX_HEIGHT:
-            image.thumbnail((MAX_WIDTH, MAX_HEIGHT))
 
         # 배경 제거
         result = remove(image)
