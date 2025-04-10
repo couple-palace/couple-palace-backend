@@ -26,22 +26,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: FLASK_SECRET_KEY,DB_URI,API_KEY
           script: |
-            echo "[0] Clone or pull repository"
-            mkdir -p ~/app
-            cd ~/app
-            if [ ! -d "git" ]; then
-              git clone https://github.com/couple-palace/couple-palace-backend.git git
-            fi
-            cd git
-            git pull origin deploy
+            echo "[1] Generate .env file"
+            echo "FLASK_SECRET_KEY=$FLASK_SECRET_KEY" > .env
+            echo "DB_URI=$DB_URI" >> .env
+            echo "API_KEY=$API_KEY" >> .env
 
-            script: |
-  echo "[1] Generate .env file"
-  echo "FLASK_SECRET_KEY=$FLASK_SECRET_KEY" > .env
-  echo "DB_URI=$DB_URI" >> .env
-  echo "API_KEY=$API_KEY" >> .env
-
-  echo "[2] Start or restart containers"
-  docker-compose down -v --remove-orphans || true
-  docker-compose up --build -d
-
+            echo "[2] Start or restart containers"
+            docker-compose down -v --remove-orphans || true
+            docker-compose up --build -d
