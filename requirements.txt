@@ -10,4 +10,4 @@ pymysql
 google-cloud-secret-manager
 python-dotenv
 prometheus_flask_exporter
-pyheif
+pillow-heif>=0.10.0  

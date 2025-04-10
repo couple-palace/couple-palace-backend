@@ -1,47 +1,50 @@
 from PIL import Image
 from rembg import remove
 import tempfile
-import pyheif
+import gc
+import pillow_heif
+
+# HEIF/HEIC 이미지 처리를 Pillow에서 가능하게 등록
+pillow_heif.register_heif_opener()
+
+MAX_WIDTH = 1024
+MAX_HEIGHT = 1024
 
 def process_image(content_file):
-    """
-    업로드된 이미지 파일을 열어서 RGBA로 변환한 후, 배경 제거 처리를 진행합니다.
-    iOS 기기에서 업로드된 HEIC/HEIF 파일일 경우 Pillow가 직접 열지 못하므로,
-    pyheif를 사용해 변환 후 처리합니다.
-    """
     filename = content_file.filename
     ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
 
-    # HEIC/HEIF 파일이면 pyheif로 읽어서 Pillow 이미지 객체로 변환
-    if ext in ['heic', 'heif']:
-        try:
-            heif_file = pyheif.read(content_file)
-            content_image = Image.frombytes(
-                heif_file.mode,
-                heif_file.size,
-                heif_file.data,
-                "raw",
-                heif_file.mode,
-                heif_file.stride
-            ).convert("RGBA")
-        except Exception as e:
-            raise ValueError(f"HEIC 이미지 변환에 실패했습니다: {str(e)}")
-    elif ext == 'gif':
-        gif = Image.open(content_file)
-        gif.seek(0)  # 첫 프레임만
-        content_image = gif.convert("RGBA")
-    else:
-        try:
-            content_image = Image.open(content_file).convert("RGBA")
-        except Exception as e:
-            raise ValueError(f"이미지 형식이 올바르지 않습니다: {str(e)}")
-
-    # 배경 제거 처리 후 PNG로 저장
     try:
-        output_image = remove(content_image)
+        # 이미지 열기 (HEIC 포함 자동 인식됨)
+        image = Image.open(content_file)
+
+        # GIF 처리 (첫 프레임만 사용)
+        if ext == 'gif':
+            image.seek(0)
+
+        image = image.convert("RGBA")
+
+        # 이미지 크기 제한
+        if image.width > MAX_WIDTH or image.height > MAX_HEIGHT:
+            image.thumbnail((MAX_WIDTH, MAX_HEIGHT))
+
+        # 배경 제거
+        result = remove(image)
+
+        # 임시 파일에 저장
         with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
             output_path = temp_file.name
-            output_image.save(output_path, format="PNG")
+            result.save(output_path, format="PNG")
+
         return output_path
+
     except Exception as e:
         raise Exception(f"이미지 처리 중 오류가 발생했습니다: {str(e)}")
+
+    finally:
+        # 메모리 해제
+        if 'image' in locals():
+            del image
+        if 'result' in locals():
+            del result
+        gc.collect()

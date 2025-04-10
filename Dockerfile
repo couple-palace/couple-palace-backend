@@ -7,7 +7,15 @@ MAINTAINER heumsi@gmail.com
 # 필수 패키지 설치
 RUN apt-get update && \
     apt-get install -y vim telnet wget && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* \
+    apt-get install -y \
+    libheif1 \
+    libheif-dev \
+    libde265-dev \
+    libffi-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # u2net 모델 다운로드
 RUN mkdir -p /root/.u2net && \
