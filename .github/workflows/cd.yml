@@ -37,10 +37,10 @@ jobs:
 
             echo "[1] Generate .env file"
             cat <<EOF > .env
-            FLASK_SECRET_KEY=$FLASK_SECRET_KEY
-            DB_URI=$DB_URI
-            API_KEY=$API_KEY
-            EOF
+FLASK_SECRET_KEY=$FLASK_SECRET_KEY
+DB_URI=$DB_URI
+API_KEY=$API_KEY
+EOF
 
             echo "[2] Start or restart containers"
             docker-compose down -v --remove-orphans || true
