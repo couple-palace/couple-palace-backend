@@ -128,10 +128,6 @@
         ▼
 🐳 Docker 컨테이너 내부 Flask + Gunicorn (5000번 포트)
 ```
-<p align="center">
-  <img src="static/images/serverstructure.png" width="650" alt="커플궁전 인프라 구조도"/>
-</p>
-
 ---
 
 ## 📊 메트릭 시각화 (Prometheus + Grafana)
