@@ -31,7 +31,7 @@
 |-----------|----------------------------------------------|
 | Language  | Python 3.11                                  |
 | Framework | Flask, flask-restx                           |
-| AI API    | OpenAI GPT (gpt-3.5-turbo / gpt-4o-mini)     |
+| AI API    | OpenAI GPT    |
 | Database  | SQLite (local), Amazon RDS (MySQL, prod)     |
 | 배포      | AWS EC2 (Docker + Nginx + Gunicorn)          |
 | 이미지 처리 | rembg, Pillow                              |
