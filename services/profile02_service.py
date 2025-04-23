@@ -108,14 +108,14 @@ def generate_nickname(prompt, job):
             {"role": "system", "content": "틱톡, 트위터, 인터넷 밈 감성, 트렌디한 형태의 형용사 또는 명사로 출력해주되, 주술관계, 목적어와의 호응이 자연스러워야 해"},
             {"role": "system", "content": "'미안해' 표현을 닉네임에 그대로 반복하지 말고, 감정을 간접적으로 표현해줘. 예를 들어 '갈등을 피하고 싶어하는 스타일', '상대방에게 져주는 성격', '배려가 몸에 밴', '불화보단 평화를 택하는 연애 스타일' 같은 식으로, 단어 선택은 부드럽고 위트있게"},
             {"role": "system", "content": "성적인 내용, 폭력적인 표현, 욕설, 차별적인 발언, 특정 대상 비하, 음란한 뉘앙스는 답변에 절대 포함하면 안돼, '성전환'도 절대 들어가서는 안돼"},
-            {"role": "system", "content": "예를들어 '아내의 집밥 먹고 싶은', '지고지순 순정파','철학을 사랑한' 와 같이 50자 이내의 1개 닉네임을 지어줘"},
+            {"role": "system", "content": f"'너가 재치있게 질문과 답변을 바탕으로 생성한 형용사나 명사를 활용해서 '형용사 또는 명사 + {job}' 형식의 닉네임으로 50자 이내로 만들어줘. 예: '아내의 집밥 먹고 싶은 태권도 관장님', '지고지순 순정파 소방관','철학을 사랑한 플로리스트'"},
         ],
         temperature=0.7,
         max_tokens=100
     )
     nickname1 = response.choices[0].message.content.strip()
-    return f"{nickname1} {job}"
-    #return nickname1
+    # return f"{nickname1} {job}"
+    return nickname1
 
 # 결혼 조건 생성
 def generate_marriage_conditions(prompt):
