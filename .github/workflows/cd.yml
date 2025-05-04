@@ -9,33 +9,42 @@ env:
   FLASK_SECRET_KEY: ${{ secrets.FLASK_SECRET_KEY }}
   DB_URI: ${{ secrets.DB_URI }}
   API_KEY: ${{ secrets.API_KEY }}
+  DOCKER_IMAGE: couple-palace-web
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code (runner 용 — EC2에는 영향 없음)
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH and deploy with docker-compose
+      - name: Set up SSH and deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: FLASK_SECRET_KEY,DB_URI,API_KEY
+          envs: FLASK_SECRET_KEY,DB_URI,API_KEY,DOCKER_IMAGE
           script: |
-            echo "[1] 최신 코드로 교체 (deploy 브랜치 기준)"
-            rm -rf ~/app/git
-            git clone --branch deploy https://github.com/your-org/couple-palace-backend.git ~/app/git
-
-            echo "[2] .env 파일 생성"
-            cd ~/app/git
-            echo "FLASK_SECRET_KEY=$FLASK_SECRET_KEY" > .env
-            echo "DB_URI=$DB_URI" >> .env
-            echo "API_KEY=$API_KEY" >> .env
-
-            echo "[3] 컨테이너 재시작"
-            docker-compose down -v --remove-orphans || true
-            docker-compose up --build -d
+            echo "[0] Clone GitHub repo"
+            mkdir -p ~/app
+            cd ~/app
+            rm -rf git
+            git clone https://github.com/couple-palace/couple-palace-backend.git git
+            cd git
+            echo "[1] Pull latest changes"
+            git pull origin deploy || true
+            echo "[2] Stop & remove old container"
+            docker stop my-container || true
+            docker rm my-container || true
+            echo "[3] Build Docker image"
+            docker build -t $DOCKER_IMAGE .
+            echo "[4] Run new container with injected secrets"
+            docker run -d \
+              -e FLASK_SECRET_KEY=$FLASK_SECRET_KEY \
+              -e DB_URI=$DB_URI \
+              -e API_KEY=$API_KEY \
+              -p 5000:5000 \
+              --name my-container \
+              $DOCKER_IMAGE
