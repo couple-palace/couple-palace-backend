@@ -27,6 +27,7 @@ jobs:
           envs: FLASK_SECRET_KEY,DB_URI,API_KEY
           script: |
             echo "[1] Generate .env file"
+            cd ~/app/git
             echo "FLASK_SECRET_KEY=$FLASK_SECRET_KEY" > .env
             echo "DB_URI=$DB_URI" >> .env
             echo "API_KEY=$API_KEY" >> .env
