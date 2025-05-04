@@ -68,8 +68,8 @@ def generate_profile(answer_list, job):
     mbti = generate_mbti(mbti_answers)
 
     nickname_prompt = "\n".join(nickname_prompts) + "\n위의 답변을 바탕으로 명사 또는 형용사 형태의 수식어구를 생성해줘."
-    nickname_base = generate_nickname(nickname_prompt)
-    nickname = f"{nickname_base} {job}"
+    nickname = generate_nickname(nickname_prompt, job)
+    # nickname = f"{nickname_base} {job}"
 
     marriage_prompt = "\n".join(marriage_prompts) + "\n위의 답변을 바탕으로 결혼 조건 3가지를 생성해줘."
     marriage_conditions = generate_marriage_conditions(marriage_prompt)
@@ -101,7 +101,7 @@ def generate_mbti(mbti_answers):
     return mbti_result
 
 # 닉네임 생성
-def generate_nickname(prompt):
+def generate_nickname(prompt, job):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -115,7 +115,7 @@ def generate_nickname(prompt):
         temperature=0.7,
         max_tokens=100
     )
-    nickname1 = response.choices[0].message.content.strip()
+    nickname1 = response.choices[0].message.content.strip() + ' ' + job
 
     return nickname1
 
