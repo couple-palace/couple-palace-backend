@@ -26,13 +26,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: FLASK_SECRET_KEY,DB_URI,API_KEY
           script: |
-            echo "[1] Generate .env file"
+            echo "[1] Navigate to the project directory"
+            cd ~/app/git
+
+            echo "[2] Generate .env file"
             echo "FLASK_SECRET_KEY=$FLASK_SECRET_KEY" > .env
             echo "DB_URI=$DB_URI" >> .env
             echo "API_KEY=$API_KEY" >> .env
-
-            echo "[2] Navigate to the project directory"
-            cd ~/app/git
 
             echo "[3] Start or restart containers"
             docker-compose down -v --remove-orphans || true
