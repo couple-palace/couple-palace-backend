@@ -67,7 +67,7 @@ def generate_profile(answer_list, job):
 
     mbti = generate_mbti(mbti_answers)
 
-    nickname_prompt = "\n".join(nickname_prompts) + "\n위의 답변을 바탕으로 형용사 형태의 수식어구를 생성해줘."
+    nickname_prompt = "\n".join(nickname_prompts) + "\n위의 답변을 바탕으로 10자 이내의 형용사 형태의 최적의 수식어구를 하나만 생성해줘."
     nickname = generate_nickname(nickname_prompt, job)
     # nickname = f"{nickname_base} {job}"
 
