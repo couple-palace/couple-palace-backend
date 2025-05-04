@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code (for runner only, safe to leave as-is)
         uses: actions/checkout@v3
 
       - name: Set up SSH and deploy with docker-compose
@@ -26,13 +26,18 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: FLASK_SECRET_KEY,DB_URI,API_KEY
           script: |
-            echo "[1] Generate .env file"
+            echo "[1] Navigate to app directory"
             cd ~/app/git
+
+            echo "[2] Pull latest deploy branch"
+            git fetch origin deploy
+            git reset --hard origin/deploy
+
+            echo "[3] Generate .env file"
             echo "FLASK_SECRET_KEY=$FLASK_SECRET_KEY" > .env
             echo "DB_URI=$DB_URI" >> .env
             echo "API_KEY=$API_KEY" >> .env
-            echo "[2] Navigate to the project directory"
-            cd ~/app/git
-            echo "[3] Start or restart containers"
+
+            echo "[4] Restart Docker containers"
             docker-compose down -v --remove-orphans || true
             docker-compose up --build -d
