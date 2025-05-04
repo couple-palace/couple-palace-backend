@@ -1,5 +1,4 @@
 import openai
-import logging
 from flask import Flask
 from config import load_secrets
 from models.quiz_models import QuizQuestion, QuizOption
@@ -19,8 +18,6 @@ client = openai.OpenAI(api_key=API_KEY)
 
 # Flask 앱 초기화
 app = Flask(__name__)
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -118,9 +115,9 @@ def generate_nickname(prompt, job):
         temperature=0.7,
         max_tokens=100
     )
-    logger.info("▶ generate_profile 호출 전 job:", repr(job))
+    print("▶ generate_profile 호출 전 job:", repr(job))
     nickname1 = response.choices[0].message.content.strip() + ' ' + job
-    logger.info("▶ nickname1:", repr(nickname1))
+    print("▶ nickname1:", repr(nickname1))
 
     return nickname1
 
