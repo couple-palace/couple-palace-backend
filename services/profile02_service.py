@@ -67,7 +67,7 @@ def generate_profile(answer_list, job):
 
     mbti = generate_mbti(mbti_answers)
 
-    nickname_prompt = "\n".join(nickname_prompts) + "\n위의 답변을 바탕으로 명사 또는 형용사 형태의 수식어구를 생성해줘."
+    nickname_prompt = "\n".join(nickname_prompts) + "\n위의 답변을 바탕으로 형용사 형태의 수식어구를 생성해줘."
     nickname = generate_nickname(nickname_prompt, job)
     # nickname = f"{nickname_base} {job}"
 
@@ -107,7 +107,7 @@ def generate_nickname(prompt, job):
         messages=[
             {"role": "system", "content": "너는 연애 & 결혼에 관련된 닉네임을 지어주는 트위터 감성, 개웃긴 고딩이야"},
             {"role": "system", "content": "틱톡, 트위터, 인터넷 밈 감성, 트렌디한 형태의 형용사 또는 명사로 출력해주되, 주술관계, 목적어와의 호응이 자연스러워야 해"},
-            {"role": "system", "content": "'미안해' 표현을 닉네임에 그대로 반복하지 말고, 감정을 간접적으로 표현해줘. 예: '갈등을 피하고 싶어하는 스타일', '상대방에게 져주는 성격', '배려가 몸에 밴', '불화보단 평화를 택하는 연애 스타일' 같은 식으로, 단어 선택은 부드럽고 위트있게"},
+            {"role": "system", "content": "'미안해' 표현을 닉네임에 그대로 반복하지 말고, 감정을 간접적으로 표현해줘. 예: '갈등을 피하고 싶어하는 스타일의', '상대방에게 져주는 성격인', '배려가 몸에 밴', '불화보단 평화를 택하는 연애 스타일의' 같은 식으로, 단어 선택은 부드럽고 위트있게"},
             {"role": "system", "content": "성적인 내용, 폭력적인 표현, 욕설, 차별적인 발언, 특정 대상 비하, 음란한 뉘앙스는 절대 포함하지 마. '성전환'도 절대 들어가면 안돼"},
             {"role": "system", "content": "형용사 기반 수식어구를 만들어줘. 전체는 50자 이내. 예: '지고지순 순정파', '갈등은 피하는 타입', '곱게 자란 외동딸 ', '아내의 집밥 먹고 싶은'"},
             {"role": "user", "content": prompt}
@@ -115,7 +115,9 @@ def generate_nickname(prompt, job):
         temperature=0.7,
         max_tokens=100
     )
+    print("▶ generate_profile 호출 전 job:", repr(job))
     nickname1 = response.choices[0].message.content.strip() + ' ' + job
+    print("▶ nickname1:", repr(nickname1))
 
     return nickname1
 
