@@ -35,7 +35,7 @@
 | Framework | Flask, flask-restx                           |
 | AI API    | OpenAI GPT    |
 | Database  | SQLite (local), Amazon RDS (MySQL, prod)     |
-| 배포      | AWS EC2 (Docker + Nginx + Gunicorn)          |
+| 배포      | AWS EC2 (Docker + GitHub Actions + Gunicorn)          |
 | 이미지 처리 | rembg, Pillow                              |
 | 기타      | dotenv, SQLAlchemy
 
